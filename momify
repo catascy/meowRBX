@@ -1,0 +1,160 @@
+--[[ MainModule Loader
+
+  ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
+ █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
+ █ ▀ █ █ ███▀██ ▀ ████ ████ ▀ ██▄▄▄▄ █ ███▀██▄ ▄██ █ ▀ █
+  ▀▄▀  ▀▄▄▄▄▄▀▄▄▀▄▄▀▀▄▄▄▀▀▄▄▀▄▄▀▄▄▄▄▄▀▄▄▄▄▄▀▀▄▄▄▀▀  ▀▄▀  
+  
+					--{{  2023!  }}--                                              --[[
+
+These scripts mean a lot to me, even though they may be stupid.
+I pour a lot of work into these and personalize them to my liking.
+Please don't claim these as your own or upload these for your benefit. 
+You'd be stealing my work.
+
+]]
+
+-- Services --
+local TS = game:GetService("TweenService")
+local Players = game:GetService("Players")
+local RunSerivce = game:GetService("RunService")
+
+-- Variables --
+local Player = Players.LocalPlayer
+local Character = Player.Character
+
+local CharHRP = Character:WaitForChild("HumanoidRootPart")
+local CharHead = Character:WaitForChild("Head")
+local CharTorso = Character:WaitForChild("Torso")
+local CharLeftLeg = Character:WaitForChild("Left Leg")
+local CharRightLeg = Character:WaitForChild("Right Leg")
+
+local CharShirt = Character:WaitForChild("Shirt")
+local CharPants = Character:WaitForChild("Pants")
+
+-- Setup --
+local Shirt = Instance.new("Part")
+Shirt.Size = Vector3.new(1.942, 1.332, 1.524)
+Shirt.Material = Enum.Material.Plastic
+Shirt.Color = CharTorso.Color
+Shirt.CanCollide = false
+Shirt.Name = "Meowers"
+
+local ShirtTexture = Instance.new("Decal")
+ShirtTexture.Texture = CharShirt.ShirtTemplate
+ShirtTexture.Parent = Shirt
+
+local ShirtMesh = Instance.new("SpecialMesh")
+ShirtMesh.Scale = Vector3.new(1.3,1.3,1.3)
+ShirtMesh.MeshId = "rbxassetid://12869196162"
+ShirtMesh.Parent = Shirt
+
+local ShirtWeld = Instance.new("Weld")
+ShirtWeld.C0 = CFrame.new(0, 0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0)
+ShirtWeld.Part0 =  CharTorso
+ShirtWeld.Part1 = Shirt
+ShirtWeld.Parent = CharTorso
+
+local LeftLegPart = Instance.new("Part")
+LeftLegPart.Size = Vector3.new(1, 2, 1)
+LeftLegPart.Color = Character:WaitForChild("Left Leg").Color
+LeftLegPart.CanCollide = false
+
+local RightLegPart = Instance.new("Part")
+RightLegPart.Size = Vector3.new(1, 2, 1)
+RightLegPart.Color = Character:WaitForChild("Right Leg").Color
+RightLegPart.CanCollide = false
+
+local LeftLegMesh = Instance.new("SpecialMesh")
+LeftLegMesh.MeshId = "rbxassetid://6870651596"
+LeftLegMesh.Scale = Vector3.new(1.1, 1, 1.1)
+LeftLegMesh.Offset = Vector3.new(0, 0.1, -0.065)
+LeftLegMesh.Parent = LeftLegPart
+
+local RightLegMesh = Instance.new("SpecialMesh")
+RightLegMesh.MeshId = "rbxassetid://6870651384"
+RightLegMesh.Scale = Vector3.new(1.1, 1, 1.1)
+RightLegMesh.Offset = Vector3.new(0, 0.1, 0.065)
+RightLegMesh.Parent = RightLegPart
+
+local LeftLegDecal = Instance.new("Decal")
+LeftLegDecal.Texture = CharPants.PantsTemplate
+LeftLegDecal.Parent = LeftLegPart
+
+local RightLegDecal = Instance.new("Decal")
+RightLegDecal.Texture = CharPants.PantsTemplate
+RightLegDecal.Parent = RightLegPart
+
+local LeftLegWeld = Instance.new("Weld")
+LeftLegWeld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0, math.rad(90), 0)
+LeftLegWeld.Part0 = CharLeftLeg
+LeftLegWeld.Part1 = LeftLegPart
+LeftLegWeld.Parent = CharLeftLeg
+
+local RightLegWeld = Instance.new("Weld")
+RightLegWeld.C0 = CFrame.new(0,0,0) * CFrame.Angles(0, math.rad(90), 0)
+RightLegWeld.Part0 = CharRightLeg
+RightLegWeld.Part1 = RightLegPart
+RightLegWeld.Parent = CharRightLeg
+
+-- Initalization --
+ShirtWeld.Parent = CharTorso
+Shirt.Parent = CharTorso
+LeftLegPart.Parent = CharLeftLeg
+RightLegPart.Parent = CharRightLeg
+CharLeftLeg.Transparency = 1
+CharRightLeg.Transparency = 1
+
+local Settings = {
+	MeowScaleList = {
+		Vector3.new(1.1, 1.1, 1.1),
+		Vector3.new(1.3, 1.3, 1.3),
+		Vector3.new(1.5, 1.5, 1.5),
+	},
+	MeowOffsetList = {
+		CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+		CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+		CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+	},
+	TweenList = {
+		Time = 0.75,
+		Style = Enum.EasingStyle.Sine,
+		Direction = Enum.EasingDirection.Out,
+	}
+}
+
+local TI = TweenInfo.new(Settings.TweenList.Time, Settings.TweenList.Style, Settings.TweenList.Direction)
+local TI2 = TweenInfo.new(Settings.TweenList.Time/15, Settings.TweenList.Style, Settings.TweenList.Direction)
+
+Players.LocalPlayer.Chatted:Connect(function(msg: string)
+	if msg == "/e meowsize 1" then
+		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[1]}):Play()
+		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[1]}):Play()
+		--[[Parts.Shirt.Heart:Emit(10)
+		Parts.Shirt.Star:Emit(10)
+		Parts.Shirt.Synth:Play()]]
+	elseif msg == "/e meowsize 2" then
+		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[2]}):Play()
+		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[2]}):Play()
+		--[[Parts.Shirt.Heart:Emit(10)
+		Parts.Shirt.Star:Emit(10)
+		Parts.Shirt.Synth:Play()]]
+	elseif msg == "/e meowsize 3" then
+		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[3]}):Play()
+		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[3]}):Play()
+		--[[Parts.Shirt.Heart:Emit(10)
+		Parts.Shirt.Star:Emit(10)
+		Parts.Shirt.Synth:Play()]]
+	elseif msg == "/e thighsize 1" then
+		
+	end
+end)
+
+local LastY = 0
+
+RunSerivce.Stepped:Connect(function()
+	LastY = CharHRP.Position.Y
+	RunSerivce.Heartbeat:Wait()
+	local yVelocity = LastY - CharHRP.Position.Y
+	TS:Create(ShirtWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/15,0) * CFrame.Angles(math.rad(yVelocity)*5,0,0)}):Play()
+end)
