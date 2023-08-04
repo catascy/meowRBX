@@ -31,8 +31,8 @@ local CharTorso = Character:WaitForChild("Torso")
 local CharLeftLeg = Character:WaitForChild("Left Leg")
 local CharRightLeg = Character:WaitForChild("Right Leg")
 
-local CharShirt = Character:WaitForChild("Shirt")
-local CharPants = Character:WaitForChild("Pants")
+local CharShirt = Character:FindFirstChildOfClass("Shirt")
+local CharPants = Character:FindFirstChildOfClass("Pants")
 
 -- Setup --
 local Shirt = Instance.new("Part")
