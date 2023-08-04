@@ -179,5 +179,4 @@ RunSerivce.Stepped:Connect(function()
 		yVelocity = -6
 	end
 	TS:Create(ShirtWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/15,0) * CFrame.Angles(math.rad(yVelocity)*5,0,0)}):Play()
-	print(yVelocity)
 end)
