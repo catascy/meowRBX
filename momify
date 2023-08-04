@@ -1,4 +1,4 @@
---[[ MainModule Loader, updated 8/4/23
+--[[ MainModule Loader, updated 8/4/23 1:24 CDT (UTC-5)
 
   ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
  █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
@@ -21,20 +21,88 @@ local TS = game:GetService("TweenService")
 local Players = game:GetService("Players")
 local RunSerivce = game:GetService("RunService")
 
+-- Settings --
+local Settings = {
+	MeowScaleList = {
+		Vector3.new(1.1, 1.1, 1.1),
+		Vector3.new(1.3, 1.3, 1.3),
+		Vector3.new(1.5, 1.5, 1.5),
+	},
+	MeowOffsetList = {
+		R6 = {
+			CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+		},
+		R15 = {
+			CFrame.new(0, 0.18, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0, 0.05, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0, -0.03, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+		}
+	},
+	ThighScaleList = {
+		Vector3.new(1.1,1,1.1),
+		Vector3.new(1.2,1,1.2),
+		Vector3.new(1.3,1,1.3)
+	},
+	ThighOffsetList = {
+		Left = {
+			Vector3.new(0, 0.1, -0.065),
+			Vector3.new(0, 0.1, -0.115),
+			Vector3.new(0, 0.1, -0.145)
+		},
+		Right = {
+			Vector3.new(0, 0.1, 0.065),
+			Vector3.new(0, 0.1, 0.115),
+			Vector3.new(0, 0.1, 0.145)
+		},
+	},
+	TweenList = {
+		Time = 0.75,
+		Style = Enum.EasingStyle.Sine,
+		Direction = Enum.EasingDirection.Out,
+	}
+}
+
 -- Variables --
 local Player = Players.LocalPlayer
 local Character = Player.Character
 
 local CharHRP = Character:WaitForChild("HumanoidRootPart")
 local CharHead = Character:WaitForChild("Head")
-local CharTorso = Character:WaitForChild("Torso")
-local CharLeftLeg = Character:WaitForChild("Left Leg")
-local CharRightLeg = Character:WaitForChild("Right Leg")
+local CharTorso = nil
+local CharLeftLeg = nil
+local CharRightLeg = nil
+
+local CharShirt = Character:FindFirstChildOfClass("Shirt")
+local CharPants = Character:FindFirstChildOfClass("Pants")
+
+local CharIsR6 = true
+
+if Character:FindFirstChild("UpperTorso") then
+	CharIsR6 = false
+	CharTorso = Character:WaitForChild("UpperTorso",.1)
+	CharLeftLeg = Character:WaitForChild("LeftUpperLeg",.1)
+	CharRightLeg = Character:WaitForChild("RightUpperLeg",.1)
+else
+	CharTorso = Character:WaitForChild("Torso",.1)
+	CharLeftLeg = Character:WaitForChild("Left Leg",.1)
+	CharRightLeg = Character:WaitForChild("Right Leg",.1)
+end
 
 local CharShirt = Character:FindFirstChildOfClass("Shirt")
 local CharPants = Character:FindFirstChildOfClass("Pants")
 
 -- Setup --
+local function LoadSound(name: string, id: string)
+	local Sound = Instance.new("Sound")
+	Sound.SoundId = id
+	Sound.Name = name
+	Sound.RollOffMaxDistance = 100
+	Sound.Parent = CharHRP
+	return Sound
+end
+
 local Shirt = Instance.new("Part")
 Shirt.Size = Vector3.new(1.942, 1.332, 1.524)
 Shirt.Material = Enum.Material.Plastic
@@ -47,24 +115,28 @@ ShirtTexture.Texture = CharShirt.ShirtTemplate
 ShirtTexture.Parent = Shirt
 
 local ShirtMesh = Instance.new("SpecialMesh")
-ShirtMesh.Scale = Vector3.new(1.3,1.3,1.3)
+ShirtMesh.Scale = Settings.MeowScaleList[2]
 ShirtMesh.MeshId = "rbxassetid://12869196162"
 ShirtMesh.Parent = Shirt
 
 local ShirtWeld = Instance.new("Weld")
-ShirtWeld.C0 = CFrame.new(0, 0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0)
-ShirtWeld.Part0 =  CharTorso
+if CharIsR6 == true then
+	ShirtWeld.C0 = Settings.MeowOffsetList.R6[2]
+else
+	ShirtWeld.C0 = Settings.MeowOffsetList.R15[2]
+end
 ShirtWeld.Part1 = Shirt
+ShirtWeld.Part0 =  CharTorso
 ShirtWeld.Parent = CharTorso
 
 local LeftLegPart = Instance.new("Part")
 LeftLegPart.Size = Vector3.new(1, 2, 1)
-LeftLegPart.Color = Character:WaitForChild("Left Leg").Color
+LeftLegPart.Color = CharLeftLeg.Color
 LeftLegPart.CanCollide = false
 
 local RightLegPart = Instance.new("Part")
 RightLegPart.Size = Vector3.new(1, 2, 1)
-RightLegPart.Color = Character:WaitForChild("Right Leg").Color
+RightLegPart.Color = CharRightLeg.Color
 RightLegPart.CanCollide = false
 
 local LeftLegMesh = Instance.new("SpecialMesh")
@@ -99,71 +171,54 @@ RightLegWeld.Part0 = CharRightLeg
 RightLegWeld.Part1 = RightLegPart
 RightLegWeld.Parent = CharRightLeg
 
--- Initalization --
-ShirtWeld.Parent = CharTorso
-Shirt.Parent = CharTorso
-LeftLegPart.Parent = CharLeftLeg
-RightLegPart.Parent = CharRightLeg
-CharLeftLeg.Transparency = 1
-CharRightLeg.Transparency = 1
+local ExpandSound = LoadSound("expand", "rbxassetid://9125641003")
 
-local Settings = {
-	MeowScaleList = {
-		Vector3.new(1.1, 1.1, 1.1),
-		Vector3.new(1.3, 1.3, 1.3),
-		Vector3.new(1.5, 1.5, 1.5),
-	},
-	MeowOffsetList = {
-		CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-		CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-		CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
-	},
-	ThighScaleList = {
-		Vector3.new(1.1,1,1.1),
-		Vector3.new(1.2,1,1.2),
-		Vector3.new(1.3,1,1.3)
-	},
-	ThighOffsetList = {
-		Left = {
-			Vector3.new(0, 0.1, -0.065),
-			Vector3.new(0, 0.1, -0.115),
-			Vector3.new(0, 0.1, -0.145)
-		},
-		Right = {
-			Vector3.new(0, 0.1, 0.065),
-			Vector3.new(0, 0.1, 0.115),
-			Vector3.new(0, 0.1, 0.145)
-		},
-	},
-	TweenList = {
-		Time = 0.75,
-		Style = Enum.EasingStyle.Sine,
-		Direction = Enum.EasingDirection.Out,
-	}
-}
+-- Initalization --
+if CharIsR6 == true then
+	ShirtWeld.Parent = CharTorso
+	Shirt.Parent = CharTorso
+	LeftLegPart.Parent = CharLeftLeg
+	RightLegPart.Parent = CharRightLeg
+	CharLeftLeg.Transparency = 1
+	CharRightLeg.Transparency = 1 
+else
+	ShirtWeld.Parent = CharTorso
+	Shirt.Parent = CharTorso
+end
 
 local TI = TweenInfo.new(Settings.TweenList.Time, Settings.TweenList.Style, Settings.TweenList.Direction)
 local TI2 = TweenInfo.new(Settings.TweenList.Time/15, Settings.TweenList.Style, Settings.TweenList.Direction)
 
+local function ChangeSize(part: string, scale: number)
+	if part == "meow" then
+		if CharIsR6 == true then
+			TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[scale]}):Play()
+			TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6[scale]}):Play()
+		else
+			TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[scale]}):Play()
+			TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15[scale]}):Play()
+		end
+		ExpandSound:Play()
+	elseif part == "thighs" then
+		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Left[scale]}):Play()
+		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Right[scale]}):Play()
+		ExpandSound:Play()
+	end
+end
+
 Players.LocalPlayer.Chatted:Connect(function(msg: string)
 	if msg == "/e meowsize 1" then
-		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[1]}):Play()
-		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[1]}):Play()
+		ChangeSize("meow", 1)
 	elseif msg == "/e meowsize 2" then
-		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[2]}):Play()
-		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[2]}):Play()
+		ChangeSize("meow", 2)
 	elseif msg == "/e meowsize 3" then
-		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[3]}):Play()
-		TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList[3]}):Play()
+		ChangeSize("meow", 3)
 	elseif msg == "/e thighsize 1" then
-		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[1], Offset = Settings.ThighOffsetList.Left[1]}):Play()
-		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[1], Offset = Settings.ThighOffsetList.Right[1]}):Play()
+		ChangeSize("thighs", 1)
 	elseif msg == "/e thighsize 2" then
-		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[2], Offset = Settings.ThighOffsetList.Left[2]}):Play()
-		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[2], Offset = Settings.ThighOffsetList.Right[2]}):Play()		
+		ChangeSize("thighs", 2)
 	elseif msg == "/e thighsize 3" then
-		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[3], Offset = Settings.ThighOffsetList.Left[3]}):Play()
-		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[3], Offset = Settings.ThighOffsetList.Right[3]}):Play()	
+		ChangeSize("thighs", 3)
 	end
 end)
 
