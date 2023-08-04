@@ -1,4 +1,4 @@
---[[ MainModule Loader, updated 8/4/23 1:24 CDT (UTC-5)
+--[[ MainModule Loader, updated 8/4/23 1:49 CDT (UTC-5)
 
   ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
  █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
@@ -219,6 +219,26 @@ Players.LocalPlayer.Chatted:Connect(function(msg: string)
 		ChangeSize("thighs", 2)
 	elseif msg == "/e thighsize 3" then
 		ChangeSize("thighs", 3)
+	elseif msg == "/e meows hide" then
+		Shirt.Transparency = 1
+		ShirtTexture.Transparency = 1
+	elseif msg == "/e meows show" then
+		Shirt.Transparency = 0
+		ShirtTexture.Transparency = 0
+	elseif msg == "/e thighs show" then
+		CharLeftLeg.Transparency = 1
+		CharRightLeg.Transparency = 1
+		RightLegPart.Transparency = 0
+		LeftLegPart.Transparency = 0
+		RightLegDecal.Transparency = 0
+		LeftLegDecal.Transparency = 0
+	elseif msg == "/e thighs hide" then
+		CharLeftLeg.Transparency = 0
+		CharRightLeg.Transparency = 0
+		RightLegPart.Transparency = 1
+		LeftLegPart.Transparency = 1
+		RightLegDecal.Transparency = 1
+		LeftLegDecal.Transparency = 1
 	end
 end)
 
