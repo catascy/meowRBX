@@ -1,4 +1,4 @@
---[[ MainModule Loader, updated 8/4/23 2:00 CDT (UTC-5)
+--[[ MainModule Loader, updated 8/5/23 1:20 PM CDT (UTC-5)
 
   ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
  █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
@@ -27,34 +27,40 @@ local Settings = {
 		Vector3.new(1.1, 1.1, 1.1),
 		Vector3.new(1.3, 1.3, 1.3),
 		Vector3.new(1.5, 1.5, 1.5),
+		Vector3.new(1.7, 1.7, 1.7),
 	},
 	MeowOffsetList = {
 		R6 = {
 			CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
 			CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
 			CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0, -0.05, -1) * CFrame.Angles(0, math.rad(180), 0),
 		},
 		R15 = {
 			CFrame.new(0, 0.18, -0.8) * CFrame.Angles(0, math.rad(180), 0),
 			CFrame.new(0, 0.05, -0.8) * CFrame.Angles(0, math.rad(180), 0),
 			CFrame.new(0, -0.03, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+			CFrame.new(0, -0.2, -1) * CFrame.Angles(0, math.rad(180), 0),
 		}
 	},
 	ThighScaleList = {
 		Vector3.new(1.1,1,1.1),
 		Vector3.new(1.2,1,1.2),
-		Vector3.new(1.3,1,1.3)
+		Vector3.new(1.3,1,1.3),
+		Vector3.new(1.4,1,1.4)
 	},
 	ThighOffsetList = {
 		Left = {
 			Vector3.new(0, 0.1, -0.065),
 			Vector3.new(0, 0.1, -0.115),
-			Vector3.new(0, 0.1, -0.145)
+			Vector3.new(0, 0.1, -0.145),
+			Vector3.new(0, 0.1, -0.2)
 		},
 		Right = {
 			Vector3.new(0, 0.1, 0.065),
 			Vector3.new(0, 0.1, 0.115),
-			Vector3.new(0, 0.1, 0.145)
+			Vector3.new(0, 0.1, 0.145),
+			Vector3.new(0, 0.1, 0.2)
 		},
 	},
 	TweenList = {
@@ -141,13 +147,13 @@ RightLegPart.CanCollide = false
 
 local LeftLegMesh = Instance.new("SpecialMesh")
 LeftLegMesh.MeshId = "rbxassetid://6870651596"
-LeftLegMesh.Scale = Vector3.new(1.1, 1, 1.1)
+LeftLegMesh.Scale = Settings.ThighScaleList[1]
 LeftLegMesh.Offset = Vector3.new(0, 0.1, -0.065)
 LeftLegMesh.Parent = LeftLegPart
 
 local RightLegMesh = Instance.new("SpecialMesh")
 RightLegMesh.MeshId = "rbxassetid://6870651384"
-RightLegMesh.Scale = Vector3.new(1.1, 1, 1.1)
+RightLegMesh.Scale = Settings.ThighScaleList[1]
 RightLegMesh.Offset = Vector3.new(0, 0.1, 0.065)
 RightLegMesh.Parent = RightLegPart
 
@@ -227,18 +233,22 @@ local function ChangeSize(part: string, scale: number)
 end
 
 Players.LocalPlayer.Chatted:Connect(function(msg: string)
-	if msg == "/e meowsize 1" then
+	if msg == "/e meowsize 1" or msg == "/e meowsize small" then
 		ChangeSize("meow", 1)
-	elseif msg == "/e meowsize 2" then
+	elseif msg == "/e meowsize 2" or msg == "/e meowsize medium" then
 		ChangeSize("meow", 2)
-	elseif msg == "/e meowsize 3" then
+	elseif msg == "/e meowsize 3" or msg == "/e meowsize large" then
 		ChangeSize("meow", 3)
-	elseif msg == "/e thighsize 1" then
+	elseif msg == "/e meowsize 4" or msg == "/e meowsize xlarge" then
+		ChangeSize("meow", 4)
+	elseif msg == "/e thighsize 1" or msg == "/e thighsize small" then
 		ChangeSize("thighs", 1)
-	elseif msg == "/e thighsize 2" then
+	elseif msg == "/e thighsize 2" or msg == "/e thighsize medium" then
 		ChangeSize("thighs", 2)
-	elseif msg == "/e thighsize 3" then
+	elseif msg == "/e thighsize 3" or msg == "/e thighsize large" then
 		ChangeSize("thighs", 3)
+	elseif msg == "/e thighsize 4" or msg == "/e thighsize xlarge" then
+		ChangeSize("thighs", 4)
 	elseif msg == "/e meows hide" then
 		Shirt.Transparency = 1
 		ShirtTexture.Transparency = 1
