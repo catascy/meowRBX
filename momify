@@ -1,4 +1,4 @@
---[[ MainModule Loader, updated 8/5/23 1:20 PM CDT (UTC-5)
+--[[ MainModule Loader, updated 8/6/23 12:16 PM CDT (UTC-5)
 
   ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
  █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
@@ -23,6 +23,18 @@ local RunSerivce = game:GetService("RunService")
 
 -- Settings --
 local Settings = {
+	BellyScaleList = {
+		Vector3.new(0, 0, 0),
+		Vector3.new(0.75, 0.75, 0.75),
+		Vector3.new(0.9, 0.9, 0.85),
+		Vector3.new(1.05, 1.05, 1)
+	},
+	BellyOffsetList = {
+		CFrame.new(0, 0, 0) * CFrame.Angles(0,0,0),
+		CFrame.new(0, -0.8, -1.3) * CFrame.Angles(0,0,0),
+		CFrame.new(0, -1, -1.6) * CFrame.Angles(0,0,0),
+		CFrame.new(0, -1.3, -1.8) * CFrame.Angles(0,0,0),
+	},
 	MeowScaleList = {
 		Vector3.new(1.1, 1.1, 1.1),
 		Vector3.new(1.3, 1.3, 1.3),
@@ -31,16 +43,32 @@ local Settings = {
 	},
 	MeowOffsetList = {
 		R6 = {
-			CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0, -0.05, -1) * CFrame.Angles(0, math.rad(180), 0),
+			NoBelly = {
+				CFrame.new(0, 0.282, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0 ,0.175, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.05, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, -0.05, -1) * CFrame.Angles(0, math.rad(180), 0),
+			},
+			Belly = {
+				CFrame.new(0, 0.4, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -0.9) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -1) * CFrame.Angles(0, math.rad(180), 0),
+			}
 		},
 		R15 = {
-			CFrame.new(0, 0.18, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0, 0.05, -0.8) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0, -0.03, -0.85) * CFrame.Angles(0, math.rad(180), 0),
-			CFrame.new(0, -0.2, -1) * CFrame.Angles(0, math.rad(180), 0),
+			NoBelly = {
+				CFrame.new(0, 0.18, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.05, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, -0.03, -0.85) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, -0.2, -1) * CFrame.Angles(0, math.rad(180), 0),
+			},
+			Belly = {
+				CFrame.new(0, 0.18, -0.8) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -0.95) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -1.1) * CFrame.Angles(0, math.rad(180), 0),
+				CFrame.new(0, 0.4, -1.25) * CFrame.Angles(0, math.rad(180), 0),
+			}
 		}
 	},
 	ThighScaleList = {
@@ -84,6 +112,8 @@ local CharShirt = Character:FindFirstChildOfClass("Shirt")
 local CharPants = Character:FindFirstChildOfClass("Pants")
 
 local CharIsR6 = true
+local CharBellyOut = false
+local MeowsSize = 2
 
 if Character:FindFirstChild("UpperTorso") then
 	CharIsR6 = false
@@ -127,13 +157,29 @@ ShirtMesh.Parent = Shirt
 
 local ShirtWeld = Instance.new("Weld")
 if CharIsR6 == true then
-	ShirtWeld.C0 = Settings.MeowOffsetList.R6[2]
+	ShirtWeld.C0 = Settings.MeowOffsetList.R6.NoBelly[2]
 else
-	ShirtWeld.C0 = Settings.MeowOffsetList.R15[2]
+	ShirtWeld.C0 = Settings.MeowOffsetList.R15.NoBelly[2]
 end
 ShirtWeld.Part1 = Shirt
 ShirtWeld.Part0 =  CharTorso
 ShirtWeld.Parent = CharTorso
+
+local BellyPart = Instance.new("Part")
+BellyPart.Size = Vector3.new(3, 3, 3)
+BellyPart.Color = CharTorso.Color
+BellyPart.Material = Enum.Material.SmoothPlastic
+
+local BellyMesh = Instance.new("SpecialMesh")
+BellyMesh.MeshId = "rbxassetid://13687327254"
+BellyMesh.Scale = Settings.BellyScaleList[1]
+BellyMesh.Parent = BellyPart
+
+local BellyWeld = Instance.new("Weld")
+BellyWeld.Part0 = CharTorso
+BellyWeld.Part1 = BellyPart
+BellyWeld.C0 = Settings.BellyOffsetList[1]
+BellyWeld.Parent = CharTorso
 
 local LeftLegPart = Instance.new("Part")
 LeftLegPart.Size = Vector3.new(1, 2, 1)
@@ -199,9 +245,11 @@ BlushWeld.Parent = CharHead
 local ExpandSound = LoadSound("expand", "rbxassetid://9125641003")
 
 -- Initalization --
+ShirtWeld.Parent = CharTorso
+Shirt.Parent = CharTorso
+BellyPart.Parent = CharTorso
+BlushPart.Parent = CharHead
 if CharIsR6 == true then
-	ShirtWeld.Parent = CharTorso
-	Shirt.Parent = CharTorso
 	LeftLegPart.Parent = CharLeftLeg
 	RightLegPart.Parent = CharRightLeg
 	CharLeftLeg.Transparency = 1
@@ -210,25 +258,52 @@ else
 	ShirtWeld.Parent = CharTorso
 	Shirt.Parent = CharTorso
 end
-BlushPart.Parent = CharHead
 
 local TI = TweenInfo.new(Settings.TweenList.Time, Settings.TweenList.Style, Settings.TweenList.Direction)
 local TI2 = TweenInfo.new(Settings.TweenList.Time/15, Settings.TweenList.Style, Settings.TweenList.Direction)
 
 local function ChangeSize(part: string, scale: number)
 	if part == "meow" then
-		if CharIsR6 == true then
-			TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[scale]}):Play()
-			TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6[scale]}):Play()
+		MeowsSize = scale
+		TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[scale]}):Play()
+		if CharIsR6 then
+			if CharBellyOut then
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6.Belly[scale]}):Play()
+			else
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6.NoBelly[scale]}):Play()
+			end
 		else
-			TS:Create(ShirtMesh, TI, {Scale = Settings.MeowScaleList[scale]}):Play()
-			TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15[scale]}):Play()
+			if CharBellyOut then
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15.Belly[scale]}):Play()
+			else
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15.NoBelly[scale]}):Play()
+			end
 		end
 		ExpandSound:Play()
 	elseif part == "thighs" then
 		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Left[scale]}):Play()
 		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Right[scale]}):Play()
 		ExpandSound:Play()
+	elseif part == "belly :3" then
+		if scale > 1 then
+			CharBellyOut = true
+			if CharIsR6 then
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6.Belly[MeowsSize]}):Play()
+			else
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15.Belly[MeowsSize]}):Play()
+			end
+		else
+			CharBellyOut = false
+			if CharIsR6 then
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R6.NoBelly[MeowsSize]}):Play()
+			else
+				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15.NoBelly[MeowsSize]}):Play()
+
+			end		
+		end
+		TS:Create(BellyMesh, TI, {Scale = Settings.BellyScaleList[scale]}):Play()
+		TS:Create(BellyWeld, TI, {C0 = Settings.BellyOffsetList[scale]}):Play()
+
 	end
 end
 
@@ -249,6 +324,14 @@ Players.LocalPlayer.Chatted:Connect(function(msg: string)
 		ChangeSize("thighs", 3)
 	elseif msg == "/e thighsize 4" or msg == "/e thighsize xlarge" then
 		ChangeSize("thighs", 4)
+	elseif msg == "/e bellysize 1" or msg == "/e bellysize small" then
+		ChangeSize("belly :3", 1)
+	elseif msg == "/e bellysize 2" or msg == "/e bellysize medium" then
+		ChangeSize("belly :3", 2)
+	elseif msg == "/e bellysize 3" or msg == "/e bellysize large" then
+		ChangeSize("belly :3", 3)
+	elseif msg == "/e bellysize 4" or msg == "/e bellysize xlarge" then
+		ChangeSize("belly :3", 4)
 	elseif msg == "/e meows hide" then
 		Shirt.Transparency = 1
 		ShirtTexture.Transparency = 1
@@ -287,5 +370,10 @@ RunSerivce.Stepped:Connect(function()
 	elseif yVelocity <= -6 then
 		yVelocity = -6
 	end
-	TS:Create(ShirtWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/15,0) * CFrame.Angles(math.rad(yVelocity)*5,0,0)}):Play()
+	if CharBellyOut then
+		TS:Create(ShirtWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/15,0) * CFrame.Angles((math.rad(yVelocity)*5)+45,0,0)}):Play()
+		TS:Create(BellyWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/20,0) * CFrame.Angles(math.rad(yVelocity)*-1.5,0,0)}):Play()
+	else
+		TS:Create(ShirtWeld, TI2, {C1 =  CFrame.new(0,-yVelocity/15,0) * CFrame.Angles((math.rad(yVelocity)*5),0,0)}):Play()
+	end
 end)
