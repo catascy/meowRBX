@@ -169,6 +169,7 @@ local BellyPart = Instance.new("Part")
 BellyPart.Size = Vector3.new(3, 3, 3)
 BellyPart.Color = CharTorso.Color
 BellyPart.Material = Enum.Material.SmoothPlastic
+BellyPart.CanCollide = false
 
 local BellyMesh = Instance.new("SpecialMesh")
 BellyMesh.MeshId = "rbxassetid://13687327254"
