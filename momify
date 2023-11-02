@@ -1,4 +1,4 @@
---[[ MainModule Loader, updated 8/6/23 12:16 PM CDT (UTC-5)
+--[[ MainModule Loader, updated 11/2/23 2:08 PM CDT (UTC-5)
 
   ▄▀▄   █████   ██  █████   ██  █████ █████ █████   ▄▀▄
  █ ▄ █ █ ▄▄▄ ██▀▄ ██ ▄ ▄ ██▀▄ ██ ▄▄▄▄█ ▄▄▄ █▄ █ ▄█ █ ▄ █
@@ -169,7 +169,6 @@ local BellyPart = Instance.new("Part")
 BellyPart.Size = Vector3.new(3, 3, 3)
 BellyPart.Color = CharTorso.Color
 BellyPart.Material = Enum.Material.SmoothPlastic
-BellyPart.CanCollide = false
 
 local BellyMesh = Instance.new("SpecialMesh")
 BellyMesh.MeshId = "rbxassetid://13687327254"
@@ -243,7 +242,7 @@ BlushWeld.Part0 = CharHead
 BlushWeld.Part1 = BlushPart
 BlushWeld.Parent = CharHead
 
-local ExpandSound = LoadSound("expand", "rbxassetid://9125641003")
+local ExpandSound = LoadSound("expand", "rbxassetid://7148585764")
 
 -- Initalization --
 ShirtWeld.Parent = CharTorso
@@ -280,11 +279,9 @@ local function ChangeSize(part: string, scale: number)
 				TS:Create(ShirtWeld, TI, {C0 = Settings.MeowOffsetList.R15.NoBelly[scale]}):Play()
 			end
 		end
-		ExpandSound:Play()
 	elseif part == "thighs" then
 		TS:Create(LeftLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Left[scale]}):Play()
 		TS:Create(RightLegMesh, TI, {Scale = Settings.ThighScaleList[scale], Offset = Settings.ThighOffsetList.Right[scale]}):Play()
-		ExpandSound:Play()
 	elseif part == "belly :3" then
 		if scale > 1 then
 			CharBellyOut = true
@@ -304,8 +301,8 @@ local function ChangeSize(part: string, scale: number)
 		end
 		TS:Create(BellyMesh, TI, {Scale = Settings.BellyScaleList[scale]}):Play()
 		TS:Create(BellyWeld, TI, {C0 = Settings.BellyOffsetList[scale]}):Play()
-
 	end
+	ExpandSound:Play()
 end
 
 Players.LocalPlayer.Chatted:Connect(function(msg: string)
